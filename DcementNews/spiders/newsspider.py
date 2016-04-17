@@ -18,7 +18,7 @@ class DcementNewsSpider(scrapy.Spider):
         try:
             url=response.url
             time_raw=response.xpath('//div[@class="property"]/span[1]/text()').extract()[0]
-            time_list=re.findall('(\d+)年(\d+)月(\d+)日',time_raw)
+            time_list=re.findall(u'(\d+)年(\d+)月(\d+)日',time_raw)[0]
             time=''.join(time_list)
             title=response.xpath('//h2[@class="title"]/text()').extract()[0]
             content=response.xpath('string(//div[@class="conTxt"])').extract()[0]
