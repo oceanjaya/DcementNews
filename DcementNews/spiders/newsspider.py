@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import re
+import os
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 from DcementNews.items import  DcementNewsItem
 
 class DcementNewsSpider(scrapy.Spider):
@@ -19,16 +24,41 @@ class DcementNewsSpider(scrapy.Spider):
             url=response.url
             time_raw=response.xpath('//div[@class="property"]/span[1]/text()').extract()[0]
             time_list=re.findall(u'(\d+)年(\d+)月(\d+)日',time_raw)[0]
+            sourse_raw=response.xpath('//div[@class="property"]/span[3]/text()').extract()[0]
+            sourse=re.findall(u'来源: (.+)',sourse_raw)[0]
             time=''.join(time_list)
             title=response.xpath('//h2[@class="title"]/text()').extract()[0]
             content=response.xpath('string(//div[@class="conTxt"])').extract()[0]
+
+            # 写入TXT文件
+            filename="news_output_txt/"+title+".txt"
+            if not os.path.isfile(filename):
+                with open(filename,'wb') as f:
+                    f.write(title.decode('utf-8')+'\n\n')
+                    f.write(time_raw.decode('utf-8')+'\n')
+                    f.write(sourse_raw.decode('utf-8')+'\n')
+                    f.write(content.decode('utf-8'))
+                    f.close()
+
+            #包装到字典对象
+
             dcement_news=DcementNewsItem({
                 'url':url,
                 'time':time,
+                'source':sourse,
                 'title':title,
                 'content':content
             })
+
+
             return dcement_news
         except Exception,e:
-            print "Error"+e+" "+url
+            print e
+            print "Error"+" "+url
+
+
+
+
+
+
 

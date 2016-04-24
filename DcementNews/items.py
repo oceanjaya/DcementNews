@@ -13,6 +13,6 @@ class DcementNewsItem(scrapy.Item):
     # name = scrapy.Field()
     url=scrapy.Field()
     time=scrapy.Field()
+    source=scrapy.Field()
     title=scrapy.Field()
     content=scrapy.Field()
-

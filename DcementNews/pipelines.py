@@ -11,15 +11,15 @@ db.set_character_set('utf8')
 cursor.execute('SET NAMES utf8;')
 cursor.execute('SET CHARACTER SET utf8;')
 cursor.execute('SET character_set_connection=utf8;')
-insert_sql = "INSERT INTO `dcement_news`.`industry_news` ( `url`, `time`, `title`, `content`) \
-                    VALUES ('%s','%s','%s','%s')"
+insert_sql = "INSERT INTO `dcement_news`.`industry_news` ( `url`, `time`,`source`,`title`, `content`) \
+                    VALUES ('%s','%s','%s','%s','%s')"
 
 
 
 
 class DcementnewsPipeline(object):
     def process_item(self, item, spider):
-        sql=insert_sql%(item['url'].encode('utf-8'),item['time'].encode('utf-8'),
+        sql=insert_sql%(item['url'].encode('utf-8'),item['time'].encode('utf-8'),item['source'].encode('utf-8'),
                         item['title'].encode('utf-8'),item['content'].encode('utf-8'))
         try:
             cursor.execute(sql)
